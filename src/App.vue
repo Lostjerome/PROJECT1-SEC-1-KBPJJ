@@ -1,10 +1,6 @@
 <script setup>
-import {ref , computed} from 'vue'
+import { ref } from 'vue'
 import RiArrowLeftSLine from './components/icons/RiArrowLeftSLine.vue'
-
-fetch('https://the-trivia-api.com/api/questions?limit=20&categories=science,history')
-  .then(response => response.json())
-  .then(data => questions.value=data)
 
 fetch('https://the-trivia-api.com/api/categories')
 .then(response => response.json())
@@ -14,42 +10,28 @@ const questions = ref([])
 const categories = ref([])
 const quizCompleted = ref(false)
 const currentQuestion = ref(0)
-
-const selected = null
-
 const showHowtToPlay = ref(false)
-
-// const choices = []
-
-
-
+const category =ref('')
+const difficulty = ref('')
+const selectedLevel = ref(difficulty)
 
 
-// Cal score
-// const score = computed( () => {
-//   let point = 0
-//   let selected = null
-//   questions.value.map( (q) => {
-//     if( q.selected == q.correctAnswer){
-//       point++
-//     }
-//   })
-// })
-
-const getCurrentQuestion = computed( () => {
-  let question = questions.value[currentQuestion.value]
-  question.index = currentQuestion.value
-  return question 
-})
-
-const nextQuestion = () => {
-  if(currentQuestion.value < questions.value.length -1) {
-    currentQuestion.value++
-  }
-  else{
-    quizCompleted.value = true
-  }
+const getQuestions = (category, difficulty) => {
+  fetch(`https://the-trivia-api.com/api/questions?categories=${category}&limit=10&region=TH&difficulty=${difficulty}`)
+  .then(response => response.json())
+  .then(data => questions.value = data)
+  return questions.value
 }
+
+// const nextQuestion = () => {
+//   if(currentQuestion.value < questions.value.length -1) {
+//     currentQuestion.value++
+//   }
+//   else{
+//     quizCompleted.value = true
+//   }
+// }
+
 
 const shuffle = (array) => {
   let currentIndex = array.length,
@@ -71,8 +53,6 @@ const shuffle = (array) => {
   return array;
 };
 
-  
-
 </script>
  
 <template>
@@ -81,16 +61,7 @@ const shuffle = (array) => {
   <div class="text-center">
 
     <!-- HOME PAGE -->
-    <!-- <div class="h-screen pt-56 bg-gray-300">
-      <div class="text-4xl font-extrabold ">Quiz ja pak kid tueng Quiz Kat</div>
-      <p class="text-xl italic font-semibold my-5">A quiz IQ with this Quiz</p>
-      <div class="grid md:grid-cols-2 grid-cols-1 md:gap-5 gap-2">
-        <a href="#categories" class="md:text-right"><button class="border rounded-lg px-10 py-1 border-blue-500 bg-blue-500 text-white font-bold tracking-wide shadow-lg">Get Start</button></a>
-        <a href="#howto" class="md:text-left"><button class="border rounded-lg px-10 py-1 border-black font-semibold shadow-lg">How to play</button></a>
-      </div>
-    </div> -->
-
-    <div class="w-full h-screen flex items-center justify-center">
+    <div id="home" class="w-full h-screen flex items-center justify-center">
       <div class="flex flex-col items-center ">
         <h1 class="text-4xl text-black text-center ml-2 mr-2 md:ml-6 md:mr-6 font-bold font-mono md:text-center md:text-6xl">
           Quiz ja pak quiz tueng quiz kat
@@ -114,7 +85,7 @@ const shuffle = (array) => {
 
     <!-- How to play -->
     <div class="fixed top-0 left-0 right-0 z-50 w-full bg-black/50 flex items-center justify-center h-screen"
-      v-show="showHowtToPlay">
+    v-show="showHowtToPlay">
       <div class="bg-slate-200/90  rounded-lg text-black w-3/4 relative shadow-2xl h-5/6">
         <button class="absolute right-0 p-6 hover:underline" @click="showHowtToPlay = !showHowtToPlay">close</button>
         <div class="text-center pt-28 space-y-9">
@@ -124,56 +95,75 @@ const shuffle = (array) => {
       </div>
     </div>
 
-
     <!-- CATEGORIES -->
-    <div id="categories" class="py-7 px-10">
-      <div class="md:text-4xl text-2xl md:none font-extrabold md:my-12 my-6">What <span class="text-red-700">kind</span> of quiz would you like to take ?</div>
+    <div id="categories" class="md:pt-3 py-7 px-10">
+      <div class="md:text-4xl text-2xl md:none font-extrabold md:my-12 my-6">
+        What <span class="text-red-700">kind</span> of quiz would you like to take ?
+      </div>
       <div class="grid md:grid-cols-4 grid-cols-2 gap-5 md:px-48 font-medium">
-        <a href="#level" v-for="(key) of Object.entries(categories)" 
-        class="py-14 border rounded-lg bg-stone-200 hover:bg-green-200 shadow-lg">
-        {{ key[0] }}
+        <!-- for...in ; got property of opbject -->
+        <a href="#level" v-for="(prop,object) in categories"
+        class="py-14 border rounded-lg bg-stone-200 hover:bg-green-200 shadow-lg" 
+        @click="category = prop[0]">
+        {{ object }}
         </a>
+        <p>Selected : {{ category }}</p>
       </div>
     </div>
 
     <!-- LEVEL -->
-    <div id="level" class="py-6 px-9">
+    <div id="level" class="md:py-6 py-10 px-9">
+      <p>{{ difficulty }}</p>
       <div class="md:text-4xl text-2xl md:none font-extrabold md:my-14 my-7">What <span class="text-red-700">difficulty</span> would you like to start with ?</div>
       <div class="grid md:grid-cols-3 grid-cols-1 gap-7 md:px-32 px-5 font-medium">
-        <div class="h-96 border rounded-3xl bg-green-400 hover:bg-green-500 shadow-xl px-9 pt-64 text-start">
+        <div id="easy" class="h-96 border rounded-3xl bg-green-400 hover:bg-green-600 shadow-xl px-9 pt-64 text-start" 
+        @click="difficulty = 'easy'" :class="selectedLevel == 'easy' ? 'text-white' : 'text-black'">
           <p class="text-3xl font-extrabold">Easy</p>
-          <p class="">A piece of cake.</p>
+          <p class="">A piece of cake.</p>          
         </div>
-        <div class="h-96 border rounded-3xl bg-yellow-300 hover:bg-yellow-400 shadow-xl px-9 pt-64 text-start">
+        <div id="medium" class="h-96 border rounded-3xl bg-yellow-300 hover:bg-yellow-500 shadow-xl px-9 pt-64 text-start" 
+        @click="difficulty = 'medium'" :class="selectedLevel == 'medium' ? 'text-white' : 'text-black'">
           <p class="text-3xl font-extrabold">Medium</p>
           <p class="">Time to put your skill to the test!</p>
         </div>
-        <div class="h-96 border rounded-3xl bg-red-500 hover:bg-red-600 shadow-xl px-9 pt-64 text-start">
+        <div id="hard" class="h-96 border rounded-3xl bg-red-500 hover:bg-red-700 shadow-xl px-9 pt-64 text-start" 
+        @click="difficulty = 'hard'" :class="selectedLevel == 'hard' ? 'text-white' : 'text-black'">
           <p class="text-3xl font-extrabold">Hard</p>
           <p class="">Your're smart? Prove it with this one!</p>
         </div>
       </div>
-      <div class="text-right mt-10 md:px-32">
-        <a href="#test"><button class="border rounded-lg py-1 px-5 bg-blue-500 text-white font-bold tracking-wide shadow-lg">Lets Play</button></a>
+      <div class="grid md:grid-cols-2 grid-cols-1 mt-10 md:px-32 md:none m-5">        
+        <a href="#categories" class="text-left md:block"><button class="border border-black rounded-lg py-1 px-5 font-semibold tracking-wide shadow-lg">Back</button></a>
+        <a href="#test" class="text-right"><button class="border rounded-lg py-1 px-5 bg-blue-500 text-white font-bold tracking-wide shadow-lg">Lets Play</button></a>
       </div>
     </div>
 
-    <!-- question -->
-    <!-- <div class="flex justify-center">
-          <div class="md:w-2/4 w-3/4 bg-white border rounded-xl shadow-xl">
-            <p class="font-serif mt-6 text-stone-400">Question {{ getCurrentQuestion.index+1 }} / {{ questions.length }} </p>
-            <h1 class="text-xl font-semibold m-10 " >{{ getCurrentQuestion.question }}</h1>
+    <!-- BAR -->
+    <div class="h-screen">
+    <div id="test" class="md:py-10 py-5  md:px-20 px-4">
+          <div class="flex flex-row border rounded-full bg-stone-100 p-1 shadow-lg">
+            <a href="#home"><button class="flex flex-row items-center border rounded-full p-2 bg-white "><RiArrowLeftSLine/>Back</button></a>
           </div>
-        </div>  -->
+        </div>
+
+    <!-- question -->
+    <div class="flex justify-center">
+          <div class="md:w-2/4 m-9 bg-white border rounded-xl shadow-xl">
+            <p class="font-serif mt-6 text-stone-400">Question {{  }} / {{ questions.length }} </p>
+            <h1 class="text-xl font-semibold m-10 " >{{ getCurrentQuestion }}</h1>
+          </div>
+        </div> 
 
           <!-- choices -->    
-        <!-- <div class="grid md:grid-cols-2 grid-cols-1 justify-center m-10 gap-5">
-          <div v-for="(choice, index) in getCurrentQuestion.incorrectAnswers" :key="index">
-            <div class="bg-white border rounded-xl shadow-xl py-3 hover:bg-slate-200" >
-              <p>{{ choice }}</p>
+        <!-- <div class="grid md:grid-cols-2 grid-cols-1 justify-center mx-10 gap-5">
+          <div v-for="(choice) in getCurrentQuestion.incorrectAnswers">
+            <div class="bg-white border rounded-xl shadow-xl py-3 hover:bg-slate-200" @click="nextQuestion">
+              <p>{{ choice }}</p>            
             </div>
           </div>
+          
         </div> -->
+        </div>
 
   </div>
 
