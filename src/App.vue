@@ -1,11 +1,35 @@
 <script setup>
-// import data from './data/database.json'
+import { ref } from "vue"
+const correct = ref(false)
+const userAnswer = ref('')
+const score = ref(0)
+
+
+
 // get-Data
   fetch('https://the-trivia-api.com/api/questions?categories=music&limit=10&difficulty=medium')
       .then(response =>response.json())
       .then(data =>(data))
       .catch(error => console.log(error))
       
+
+function shuffle(array) {
+  return array?.sort(() => Math.random() - 0.5)
+}
+
+function randomChoice(data) {
+  const correctAns = data?.correctAnswer
+  const incorrectAns = data?.incorrectAnswers
+  const choice = []
+  choice?.push(correctAns)
+  incorrectAns?.forEach(element => {
+    choice?.push(element)
+  })
+  return choice
+}
+
+
+
 </script>
 
 <template>
@@ -43,15 +67,15 @@
             <p class=" mt-3 text-gray-800">Question xxx/10</p>
 
             <h2 class=" font-semibold break-all m-3 text-4xl items-center "
-                  >I think I'm cool. answer truth only
+                  >{{ question }}
             </h2>
           </div>
       </div>
         <div class=" grid grid-cols-1 gap-3 bg-slate-300 mt-5 py-5 px-10 rounded-3xl w-full  
         lg:grid-cols-2">
             <button class="bg-white rounded-3xl break-all py-3 px-2 w-full lg:px-10 hover:bg-slate-400">not as me</button>
-            <button class="bg-white rounded-3xl break-all py-3 px-2 w-full lg:px-10 hover:bg-slate-400">silly fat idiot</button>
-            <button class="bg-white rounded-3xl break-all py-3 px-2 w-full lg:px-10 hover:bg-slate-400">You motherfucking cool</button>
+            <button class="bg-white rounded-3xl break-all py-3 px-2 w-full lg:px-10 hover:bg-slate-400">Ahhhh no</button>
+            <button class="bg-white rounded-3xl break-all py-3 px-2 w-full lg:px-10 hover:bg-slate-400">You so cool</button>
             <button class="bg-white rounded-3xl break-all py-3 px-2 w-full lg:px-10 hover:bg-slate-400">Can't ask for answers to questions</button>
         </div>
 
