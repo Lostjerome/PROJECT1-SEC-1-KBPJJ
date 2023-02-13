@@ -1,4 +1,16 @@
 <script setup>
+// import data from './data/database.json'
+// get-Data
+  fetch('https://the-trivia-api.com/api/questions?categories=music&limit=10&difficulty=medium')
+      .then(response =>response.json())
+      .then(data =>(data))
+      .catch(error => console.log(error))
+
+console.log(data)
+function randomQuestion(data){
+    
+}
+
 </script>
 
 <template>
@@ -9,7 +21,7 @@
       
         <button  class=" border-solid border
             h-8 w-16
-          bg-white rounded-full ml-2"
+          bg-white rounded-full ml-2 hover:bg-slate-400" 
               > &#60;&nbsp;Back
         </button>
 
@@ -42,10 +54,10 @@
       </div>
         <div class=" grid grid-cols-1 gap-3 bg-slate-300 mt-5 py-5 px-10 rounded-3xl w-full  
         lg:grid-cols-2">
-            <button class="bg-white rounded-3xl break-all py-3 px-2 w-full lg:px-10">not as me</button>
-            <button class="bg-white rounded-3xl break-all py-3 px-2 w-full lg:px-10">silly fat idiot</button>
-            <button class="bg-white rounded-3xl break-all py-3 px-2 w-full lg:px-10">You motherfucking cool</button>
-            <button class="bg-white rounded-3xl break-all py-3 px-2 w-full lg:px-10">Can't ask for answers to questions</button>
+            <button class="bg-white rounded-3xl break-all py-3 px-2 w-full lg:px-10 hover:bg-slate-400">not as me</button>
+            <button class="bg-white rounded-3xl break-all py-3 px-2 w-full lg:px-10 hover:bg-slate-400">silly fat idiot</button>
+            <button class="bg-white rounded-3xl break-all py-3 px-2 w-full lg:px-10 hover:bg-slate-400">You motherfucking cool</button>
+            <button class="bg-white rounded-3xl break-all py-3 px-2 w-full lg:px-10 hover:bg-slate-400">Can't ask for answers to questions</button>
         </div>
 
         
@@ -57,7 +69,7 @@
 
         <!-- REF -->
         <div class="flex bg-gray-600 rounded-3xl w-full justify-center p-4 mt-10">
-            <p>All questions are from<a href="https://the-trivia-api.com/docs/#search">The Trivia API</a></p>
+            <p>All questions are from <a class=" hover:text-orange-100" href="https://the-trivia-api.com/docs/#search">The Trivia API</a></p>
         </div>
     </div>    
 
@@ -67,21 +79,21 @@
 
 
     <!-- result-score -->
-    <div class=" bg-black bg-opacity-50  absolute w-full min-h-screen flex flex-col items-center">
+    <!-- <div class=" bg-black bg-opacity-50  absolute w-full min-h-screen flex flex-col items-center">
         <div class=" flex flex-col w-3/6 h-full bg-white text-center mt-40 rounded-3xl p-2 items-center">
-          <p class=" m-3 break-all">You've finished all quizes. Here's your score </p>
+          <p class=" m-3 break-all">You've finished all quizes. Here's your score </p> -->
           <!-- circle-score -->
-          <div class=" bg-gray-300 rounded-full w-36 h-36 pt-9 mt-10">
+          <!-- <div class=" bg-gray-300 rounded-full w-36 h-36 pt-9 mt-10">
               <p class=" text-4xl font-extrabold">10</p>
               <p class=" font-medium">Out of 10</p>
-          </div>
+          </div> -->
           <!-- button-action -->
-          <div class=" flex flex-col gap-4 font-bold mt-5 py-4 w-3/4 text-center">
+          <!-- <div class=" flex flex-col gap-4 font-bold mt-5 py-4 w-3/4 text-center">
               <button class=" bg-blue-500 text-white rounded-full w-full py-2 ">Play again</button>
               <button class=" bg-gray-100 rounded-full p-2 py-2">Home</button>
           </div>
         </div>
-    </div>
+    </div> -->
 
 
 
