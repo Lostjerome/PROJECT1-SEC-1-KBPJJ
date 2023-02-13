@@ -6,10 +6,8 @@
       .then(data =>(data))
       .catch(error => console.log(error))
 
-console.log(data)
-function randomQuestion(data){
-    
-}
+
+
 
 </script>
 
