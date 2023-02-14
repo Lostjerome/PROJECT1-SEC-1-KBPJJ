@@ -101,41 +101,41 @@ const shuffle = (array) => {
         What <span class="text-red-700">kind</span> of quiz would you like to take ?
       </div>
       <div class="grid md:grid-cols-4 grid-cols-2 gap-5 md:px-48 font-medium">
-        <!-- for...in ; got property of opbject -->
+        <!-- for...in ; got property of object -->
         <a href="#level" v-for="(prop,object) in categories"
         class="py-14 border rounded-lg bg-stone-200 hover:bg-green-200 shadow-lg" 
         @click="category = prop[0]">
         {{ object }}
         </a>
-        <p>Selected : {{ category }}</p>
       </div>
     </div>
 
     <!-- LEVEL -->
     <div id="level" class="md:py-6 py-10 px-9">
-      <p>{{ difficulty }}</p>
       <div class="md:text-4xl text-2xl md:none font-extrabold md:my-14 my-7">What <span class="text-red-700">difficulty</span> would you like to start with ?</div>
       <div class="grid md:grid-cols-3 grid-cols-1 gap-7 md:px-32 px-5 font-medium">
         <div id="easy" class="h-96 border rounded-3xl bg-green-400 hover:bg-green-600 shadow-xl px-9 pt-64 text-start" 
-        @click="difficulty = 'easy'" :class="selectedLevel == 'easy' ? 'text-white' : 'text-black'">
+        @click="difficulty = 'easy'" :class="selectedLevel == 'easy' ? 'text-white  font-extrabold' : 'text-black'">
           <p class="text-3xl font-extrabold">Easy</p>
           <p class="">A piece of cake.</p>          
         </div>
-        <div id="medium" class="h-96 border rounded-3xl bg-yellow-300 hover:bg-yellow-500 shadow-xl px-9 pt-64 text-start" 
-        @click="difficulty = 'medium'" :class="selectedLevel == 'medium' ? 'text-white' : 'text-black'">
+        <div id="medium" class="h-96 border rounded-3xl bg-yellow-300 hover:bg-yellow-600 shadow-xl px-9 pt-64 text-start" 
+        @click="difficulty = 'medium'" :class="selectedLevel == 'medium' ? 'text-white font-extrabold' : 'text-black'">
           <p class="text-3xl font-extrabold">Medium</p>
           <p class="">Time to put your skill to the test!</p>
         </div>
         <div id="hard" class="h-96 border rounded-3xl bg-red-500 hover:bg-red-700 shadow-xl px-9 pt-64 text-start" 
-        @click="difficulty = 'hard'" :class="selectedLevel == 'hard' ? 'text-white' : 'text-black'">
+        @click="difficulty = 'hard'" :class="selectedLevel == 'hard' ? 'text-white  font-extrabold' : 'text-black'">
           <p class="text-3xl font-extrabold">Hard</p>
           <p class="">Your're smart? Prove it with this one!</p>
         </div>
       </div>
-      <div class="grid md:grid-cols-2 grid-cols-1 mt-10 md:px-32 md:none m-5">        
-        <a href="#categories" class="text-left md:block"><button class="border border-black rounded-lg py-1 px-5 font-semibold tracking-wide shadow-lg">Back</button></a>
-        <a href="#test" class="text-right"><button class="border rounded-lg py-1 px-5 bg-blue-500 text-white font-bold tracking-wide shadow-lg">Lets Play</button></a>
+      <div class="flex md:justify-between justify-end mt-10 md:px-32 md:none m-5">        
+        <a href="#categories" class="md:block hidden"><button class="border border-black rounded-lg py-1 px-5 font-semibold tracking-wide shadow-lg">Back</button></a>
+        <a href="#test"><button class="border rounded-lg py-1 px-5 bg-blue-500 text-white font-bold tracking-wide shadow-lg">Lets Play</button></a>
       </div>
+      <p>Selected : {{ category }}</p>
+      <p>level : {{ difficulty }}</p>
     </div>
 
     <!-- BAR -->
