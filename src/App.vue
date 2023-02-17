@@ -1,67 +1,99 @@
 <script setup>
-import { ref } from 'vue'
-import RiArrowLeftSLine from './components/icons/RiArrowLeftSLine.vue'
+import { ref , computed} from 'vue'
+import BiVolumeMuteFill from './components/icons/BiVolumeMuteFill.vue'
+import BiVolumeUpFill from './components/icons/BiVolumeUpFill.vue'
+
+
+// QUESTION
+const categories = ref([])
+const questions = ref([])
+const currentQuestion = ref(1)
+const quizCompleted = ref(false)
+const showHowtToPlay = ref(false)
+const category =ref('')
+const levelData =  [  {title: 'easy' , description : 'A piece of cake.' }, 
+                      {title: 'medium' , description : 'Time to put your skill to the test!' },
+                      {title: 'hard' , description : `Your're smart? Prove it with this one!` },] 
+const difficulty = ref('')
+const letsPlay = ref(false)
+const ans = ref('')
+const score = ref(0)
 
 fetch('https://the-trivia-api.com/api/categories')
 .then(response => response.json())
-.then(data => categories.value=data)
-
-const questions = ref([])
-const categories = ref([])
-const quizCompleted = ref(false)
-const currentQuestion = ref(0)
-const showHowtToPlay = ref(false)
-const category =ref('')
-const difficulty = ref('')
-const selectedLevel = ref(difficulty)
-
+.then(data => categories.value = data)
 
 const getQuestions = (category, difficulty) => {
   fetch(`https://the-trivia-api.com/api/questions?categories=${category}&limit=10&region=TH&difficulty=${difficulty}`)
   .then(response => response.json())
   .then(data => questions.value = data)
-  return questions.value
 }
 
-// const nextQuestion = () => {
-//   if(currentQuestion.value < questions.value.length -1) {
-//     currentQuestion.value++
+const getChoices = computed( () => {
+  let choices = []
+  if(questions.value[currentQuestion.value-1]){
+    choices = [...questions.value[currentQuestion.value-1].incorrectAnswers, questions.value[currentQuestion.value-1].correctAnswer]
+  }
+  return choices
+})
+
+// const checkAns = () => {
+//   if(ans.value == questions.value[currentQuestion.value-1].correctAnswer){
+//     score.value++
 //   }
-//   else{
-//     quizCompleted.value = true
-//   }
+//   return score.value
 // }
 
-
-const shuffle = (array) => {
-  let currentIndex = array.length,
-    temporaryValue,
-    randomIndex;
-
-  // While there remain elements to shuffle...
-  while (0 !== currentIndex) {
-    // Pick a remaining element...
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-
-    // And swap it with the current element.
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
+const nextQuestion = () => {
+  if(currentQuestion.value < questions.value.length) {
+    currentQuestion.value++
   }
+  else{
+    quizCompleted.value = true
+  }
+}
 
-  return array;
-};
+
+// bg-Music
+const inputMusic = ref(null)
+const defaultMusic = ('gameShow.mp3')
+const isMusicPlay = ref(false)
+const playAndPause = () => {
+  isMusicPlay.value = !isMusicPlay.value
+  if(isMusicPlay.value) inputMusic.value.play()
+  else inputMusic.value.pause()
+}
+
+// const shuffle = (array) => {
+//   let currentIndex = array.length,
+//     temporaryValue,
+//     randomIndex;
+
+//   // While there remain elements to shuffle...
+//   while (0 !== currentIndex) {
+//     // Pick a remaining element...
+//     randomIndex = Math.floor(Math.random() * currentIndex);
+//     currentIndex -= 1;
+
+//     // And swap it with the current element.
+//     temporaryValue = array[currentIndex];
+//     array[currentIndex] = array[randomIndex];
+//     array[randomIndex] = temporaryValue;
+//   }
+
+//   return array;
+// };
 
 </script>
  
 <template>
 
   <!-- FULL PAGE -->
-  <div class="text-center">
+  <div class="text-center" v-show="letsPlay = !letsPlay">
 
     <!-- HOME PAGE -->
     <div id="home" class="w-full h-screen flex items-center justify-center">
+      
       <div class="flex flex-col items-center ">
         <h1 class="text-4xl text-black text-center ml-2 mr-2 md:ml-6 md:mr-6 font-bold font-mono md:text-center md:text-6xl">
           Quiz ja pak quiz tueng quiz kat
@@ -113,59 +145,63 @@ const shuffle = (array) => {
     <!-- LEVEL -->
     <div id="level" class="md:py-6 py-10 px-9">
       <div class="md:text-4xl text-2xl md:none font-extrabold md:my-14 my-7">What <span class="text-red-700">difficulty</span> would you like to start with ?</div>
+
       <div class="grid md:grid-cols-3 grid-cols-1 gap-7 md:px-32 px-5 font-medium">
         <div id="easy" class="h-96 border rounded-3xl bg-green-400 hover:bg-green-600 shadow-xl px-9 pt-64 text-start" 
-        @click="difficulty = 'easy'" :class="selectedLevel == 'easy' ? 'text-white  font-extrabold' : 'text-black'">
-          <p class="text-3xl font-extrabold">Easy</p>
-          <p class="">A piece of cake.</p>          
-        </div>
-        <div id="medium" class="h-96 border rounded-3xl bg-yellow-300 hover:bg-yellow-600 shadow-xl px-9 pt-64 text-start" 
-        @click="difficulty = 'medium'" :class="selectedLevel == 'medium' ? 'text-white font-extrabold' : 'text-black'">
-          <p class="text-3xl font-extrabold">Medium</p>
-          <p class="">Time to put your skill to the test!</p>
-        </div>
-        <div id="hard" class="h-96 border rounded-3xl bg-red-500 hover:bg-red-700 shadow-xl px-9 pt-64 text-start" 
-        @click="difficulty = 'hard'" :class="selectedLevel == 'hard' ? 'text-white  font-extrabold' : 'text-black'">
-          <p class="text-3xl font-extrabold">Hard</p>
-          <p class="">Your're smart? Prove it with this one!</p>
+        v-for="level in levelData"
+        @click="difficulty = level.title">
+          <p class="text-3xl font-extrabold">{{ level.title.toLocaleUpperCase() }}</p>
+          <p class="">{{ level.description }}</p>          
         </div>
       </div>
+
       <div class="flex md:justify-between justify-end mt-10 md:px-32 md:none m-5">        
         <a href="#categories" class="md:block hidden"><button class="border border-black rounded-lg py-1 px-5 font-semibold tracking-wide shadow-lg">Back</button></a>
-        <a href="#test"><button class="border rounded-lg py-1 px-5 bg-blue-500 text-white font-bold tracking-wide shadow-lg">Lets Play</button></a>
+        <a href="#test" 
+        @click="getQuestions(category,difficulty); letsPlay = !letsPlay; playAndPause()">
+        <button class="border rounded-lg py-1 px-5 bg-blue-500 text-white font-bold tracking-wide shadow-lg">Lets Play</button></a>
       </div>
       <p>Selected : {{ category }}</p>
       <p>level : {{ difficulty }}</p>
     </div>
-
+</div>
     <!-- BAR -->
-    <div class="h-screen">
-    <div id="test" class="md:py-10 py-5  md:px-20 px-4">
-          <div class="flex flex-row border rounded-full bg-stone-100 p-1 shadow-lg">
-            <a href="#home"><button class="flex flex-row items-center border rounded-full p-2 bg-white "><RiArrowLeftSLine/>Back</button></a>
-          </div>
-        </div>
-
-    <!-- question -->
-    <div class="flex justify-center">
-          <div class="md:w-2/4 m-9 bg-white border rounded-xl shadow-xl">
-            <p class="font-serif mt-6 text-stone-400">Question {{  }} / {{ questions.length }} </p>
-            <h1 class="text-xl font-semibold m-10 " >{{ getCurrentQuestion }}</h1>
-          </div>
-        </div> 
-
-          <!-- choices -->    
-        <!-- <div class="grid md:grid-cols-2 grid-cols-1 justify-center mx-10 gap-5">
-          <div v-for="(choice) in getCurrentQuestion.incorrectAnswers">
-            <div class="bg-white border rounded-xl shadow-xl py-3 hover:bg-slate-200" @click="nextQuestion">
-              <p>{{ choice }}</p>            
+    <div v-show="letsPlay = !letsPlay">
+      <div class="h-screen text-center">
+      <div id="test" class="md:py-10 py-5  md:px-20 px-4">
+            <div class="flex flex-row border rounded-full bg-stone-100 p-1 shadow-lg">
+              <a href="#home"><button class="flex flex-row items-center border rounded-full p-2 bg-white" @click="letsPlay = !letsPlay"><RiArrowLeftSLine/>Back</button></a>
+              <div class="flex">
+                <audio ref="inputMusic" :src="defaultMusic" id="startMusic-001"></audio>
+                <button @click="playAndPause" v-if="isMusicPlay == true"><BiVolumeUpFill/></button> 
+                <button @click="playAndPause" v-else="isMusicPlay == false"><BiVolumeMuteFill/></button> 
+              </div>
             </div>
+      </div>
+
+      <!-- question -->
+
+      <div class="flex justify-center">
+            <div class="md:w-2/4 m-9 bg-white border rounded-xl shadow-xl" v-for="(q, index) in questions" v-show="currentQuestion === index+1">
+              <p class="font-serif mt-6 text-stone-400">Question {{ currentQuestion }} / {{ questions.length }} </p>
+              <h1 class="text-xl font-semibold m-10 " >{{ q.question }}</h1>
+              <p>correct : {{ q.correctAnswer }}</p> 
+            </div>
+      </div> 
+
+            <!-- choices -->    
+      <div class="grid md:grid-cols-2 grid-cols-1 justify-center mx-10 gap-5">
+        <div v-for="choice in getChoices">
+          <div class="bg-white border rounded-xl shadow-xl py-3 hover:bg-slate-200" @click="ans = choice; nextQuestion(); checkAns()">
+            <p>{{ choice }}</p>                  
           </div>
-          
-        </div> -->
         </div>
 
+        <p>ans : {{ ans }}</p>   
+      </div>
+    </div>
   </div>
+
 
 </template>
  
