@@ -53,7 +53,6 @@ const nextQuestion = () => {
   }
 }
 
-
 // bg-Music
 const inputMusic = ref(null)
 const defaultMusic = ('gameShow.mp3')
