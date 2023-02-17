@@ -1,32 +1,34 @@
 <script setup>
 import { ref } from "vue"
-const correct = ref(false)
-const userAnswer = ref('')
+const questionArr = ref([])
+const currentTG = ref(0)
 const score = ref(0)
-
 
 
 // get-Data
   fetch('https://the-trivia-api.com/api/questions?categories=music&limit=10&difficulty=medium')
       .then(response =>response.json())
-      .then(data =>(data))
-      .catch(error => console.log(error))
+      .then(data =>(questionArr.value = data))
+      .catch(error => (error))
+  ;
       
-
 function shuffle(array) {
   return array?.sort(() => Math.random() - 0.5)
 }
 
-function randomChoice(data) {
-  const correctAns = data?.correctAnswer
-  const incorrectAns = data?.incorrectAnswers
-  const choice = []
-  choice?.push(correctAns)
-  incorrectAns?.forEach(element => {
-    choice?.push(element)
-  })
-  return choice
-}
+      function randomChoice(choiceTarget){
+            const correctchoice = []
+            const incorrectChoiceArr = Object.values(choiceTarget.incorrectAnswers)
+            correctchoice.push(choiceTarget.correctAnswer)
+            const choice = [...correctchoice,...incorrectChoiceArr]
+        return choice
+      }
+
+
+
+
+
+
 
 
 
@@ -47,7 +49,7 @@ function randomChoice(data) {
         <p class=" border-solid border
             h-8 w-24 mr-8 text-center
         bg-green-400 rounded-full "
-              >Score:<span>xxx</span>
+              >Score:<span>&nbsp;{{ score }}</span>
         </p>
 
         <button class=" border-solid border
@@ -61,24 +63,28 @@ function randomChoice(data) {
     <!-- content -->
     <div class="grid grid-col-1 w-4/6 ">
       <!-- Question -->
-      <div class=" flex flex-col bg-white w-full h-auto mt-10 items-center justify-center rounded-3xl py-7 px-3" >
+      <div class=" flex flex-col bg-white w-full h-auto mt-10 items-center justify-center rounded-3xl py-7 px-3">
           <div class="text-center">
 
-            <p class=" mt-3 text-gray-800">Question xxx/10</p>
+            <p class=" mt-3 text-gray-800">Question {{currentTG+1}}/10</p>
 
-            <h2 class=" font-semibold break-all m-3 text-4xl items-center "
-                  >{{ question }}
+            <h2 class=" font-semibold break-all m-3 text-4xl items-center" 
+                  > {{ questionArr[currentTG].question }}
             </h2>
           </div>
       </div>
-        <div class=" grid grid-cols-1 gap-3 bg-slate-300 mt-5 py-5 px-10 rounded-3xl w-full  
-        lg:grid-cols-2">
-            <button class="bg-white rounded-3xl break-all py-3 px-2 w-full lg:px-10 hover:bg-slate-400">not as me</button>
-            <button class="bg-white rounded-3xl break-all py-3 px-2 w-full lg:px-10 hover:bg-slate-400">Ahhhh no</button>
-            <button class="bg-white rounded-3xl break-all py-3 px-2 w-full lg:px-10 hover:bg-slate-400">You so cool</button>
-            <button class="bg-white rounded-3xl break-all py-3 px-2 w-full lg:px-10 hover:bg-slate-400">Can't ask for answers to questions</button>
+       <!-- Choice -->
+        <div class="grid grid-cols-1 gap-3 bg-slate-300 mt-5 py-5 px-10 rounded-3xl w-full lg:grid-cols-2">
+            <div v-for =" (getC,index) in randomChoice(questionArr[currentTG]) " :key="index" id="getC"
+            @click="userClick = getC; userClick === questionArr[currentTG].correctAnswer ? score++ :''; ++currentTG ; 
+                 ">
+                
+                <button class="bg-white rounded-3xl break-all py-3 px-2 w-full lg:px-10 hover:bg-slate-400"
+                        >{{  getC  }}
+                </button>
+            </div>
         </div>
-
+      
         
         <!-- reload-Button  -->
         <div class="flex mt-7 justify-center">
@@ -103,7 +109,7 @@ function randomChoice(data) {
           <p class=" m-3 break-all">You've finished all quizes. Here's your score </p> -->
           <!-- circle-score -->
           <!-- <div class=" bg-gray-300 rounded-full w-36 h-36 pt-9 mt-10">
-              <p class=" text-4xl font-extrabold">10</p>
+              <p class=" text-4xl font-extrabold">{{ score }}</p>
               <p class=" font-medium">Out of 10</p>
           </div> -->
           <!-- button-action -->
