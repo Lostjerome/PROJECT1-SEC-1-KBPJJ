@@ -91,9 +91,9 @@ const fontDark = ref({ 'color': '#FFFFFF' })
             </button>
           </div>
         </div>
-<!--        <div class="w-11/12 hidden md:block">-->
-<!--          <img src="./assets/image/cover.png" alt="quiz" class="">-->
-<!--        </div>-->
+        <div class="w-11/12 hidden md:block">
+          <img src="./assets/image/cover.png" alt="quiz" class="">
+        </div>
       </div>
     </div>
     <!-- How to play pop up-->
