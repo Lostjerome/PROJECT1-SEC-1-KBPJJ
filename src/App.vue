@@ -9,7 +9,7 @@ const showHowtToPlay = ref(false);
 const showAnswer = ref(false);
 
 const question = ref([]);
-const catagories = ref();
+const categories = ref();
 const score = ref(0);
 const currentQuestion = ref(1);
 const process = ref(10);
@@ -20,28 +20,26 @@ const nightMode = ref(false);
 const category = ref("");
 const difficulty = ref("");
 
-const selectCTG = ref("");
-
-const difficulties = ref([
+const difficulties = [
   {
-    name: "Easy",
-    description: "easy",
-    bg: "bg-green-300",
-    selectBg: "bg-green-400",
+    title: "easy",
+    description: "A piece of cake.",
+    bg: "bg-green-500",
+    selectedbg: "bg-green-600 border-black",
   },
   {
-    name: "Medium",
-    description: "medium",
-    bg: "bg-amber-200",
-    selectBg: "bg-amber-400",
+    title: "medium",
+    description: "Time to put your skill to the test!",
+    bg: "bg-amber-300",
+    selectedbg: "bg-amber-400 border-black",
   },
   {
-    name: "Hard",
-    description: "hard sud sud",
-    bg: "bg-red-300",
-    selectBg: "bg-red-500",
+    title: "hard",
+    description: `Your're smart? Prove it with this one!`,
+    bg: "bg-red-500",
+    selectedbg: " border border-solid bg-red-600 border-black",
   },
-]);
+];
 
 const choices = computed(() => {
   let choice = [];
@@ -57,7 +55,7 @@ const choices = computed(() => {
 
 fetch("https://the-trivia-api.com/api/categories")
   .then((response) => response.json())
-  .then((data) => (catagories.value = data));
+  .then((data) => (categories.value = data));
 
 function getQuestion(category, difficulty) {
   fetch(
@@ -199,6 +197,80 @@ const darkModeSet = (item) => {
           <img src="./assets/image/cover.png" alt="quiz" class="" />
         </div>
       </div>
+    </div>
+  </div>
+  <!-- CATEGORIES -->
+  <div id="categories" class="md:pt-3 py-7 px-10 text-center">
+    <div class="md:text-4xl text-2xl md:none font-extrabold md:my-12 my-6">
+      What <span class="text-red-700">kind</span> of quiz would you like to take
+      ?
+    </div>
+    <div class="grid md:grid-cols-3 grid-cols-2 gap-5 md:px-48 font-medium">
+      <!-- for...in ; got property of object -->
+      <a
+        href="#level"
+        v-for="(prop, key) in categories"
+        :key="key"
+        class="p-8 text-center border rounded-lg shadow-lg"
+        @click="key = prop[0]"
+        :class="
+          key === prop[0]
+            ? 'border-stone-200 bg-stone-200 shadow-stone-500'
+            : 'bg-stone-200'
+        "
+      >
+        {{ key }}
+      </a>
+    </div>
+  </div>
+
+  <!-- LEVEL -->
+  <div id="level" class="md:py-6 py-10 px-9 text-center">
+    <div class="md:text-4xl text-2xl md:none font-extrabold md:my-14 my-7">
+      What <span class="text-red-700">difficulty</span> would you like to start
+      with ?
+    </div>
+
+    <div
+      class="grid md:grid-cols-3 grid-cols-1 gap-7 md:px-32 px-5 font-medium"
+    >
+      <button
+        id="easy"
+        class="h-96 border rounded-3xl px-9 pt-64 text-start"
+        v-for="(level, key) in difficulties"
+        :key="key"
+        @click="difficulty = level.title"
+        :class="difficulty === level.title ? level.selectedbg : level.bg"
+      >
+        <p class="text-3xl font-extrabold">
+          {{ level.title.toLocaleUpperCase() }}
+        </p>
+        <p class="">{{ level.description }}</p>
+      </button>
+    </div>
+
+    <div class="flex md:justify-between justify-end mt-10 md:px-32 md:none m-5">
+      <a href="#categories" class="md:block hidden"
+        ><button
+          class="border border-black rounded-lg py-1 px-5 font-semibold tracking-wide shadow-lg"
+        >
+          Back
+        </button></a
+      >
+      <a
+        href="#test"
+        @click="
+          getQuestions(category, difficulty);
+          letsPlay = !letsPlay;
+          playAndPause();
+        "
+      >
+        <button
+          class="border rounded-lg py-1 px-5 bg-blue-500 text-white font-bold tracking-wide shadow-lg"
+        >
+          Lets Play
+        </button></a
+      >
     </div>
   </div>
 </template>
