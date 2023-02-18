@@ -298,7 +298,7 @@ const darkModeSet = (item) => {
               </button>
             </div>
           </div>
-          <!-- correct: {{ question[currentQuestion - 1]?.correctAnswer }} -->
+          correct: {{ question[currentQuestion - 1]?.correctAnswer }}
           <div>
             <button class=" rounded-full w-10 h-10 shadow-xl"
               :class="nightMode ? darkModeSet('block') : 'bg-slate-200'"
@@ -306,7 +306,6 @@ const darkModeSet = (item) => {
           </div>
         </div>
       </div>
-
       <!-- step -->
       <!-- <div class="flex justify-center">
           <ul class="steps">
