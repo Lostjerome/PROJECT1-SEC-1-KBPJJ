@@ -11,9 +11,9 @@ const currentQuestion = ref(1)
 const quizCompleted = ref(false)
 const showHowtToPlay = ref(false)
 const category =ref('')
-const levelData =  [  {title: 'easy' , description : 'A piece of cake.' }, 
-                      {title: 'medium' , description : 'Time to put your skill to the test!' },
-                      {title: 'hard' , description : `Your're smart? Prove it with this one!` },] 
+const levelData =  [  {title: 'easy' , description : 'A piece of cake.' , bg: 'bg-green-500', selectedbg: 'bg-green-500 border-green-500 shadow-black'}, 
+                      {title: 'medium' , description : 'Time to put your skill to the test!' , bg: 'bg-yellow-400', selectedbg: 'bg-yellow-400 border-yellow-400 shadow-black'},
+                      {title: 'hard' , description : `Your're smart? Prove it with this one!` , bg: 'bg-red-500', selectedbg: 'bg-red-500 border-red-500 shadow-black'},] 
 const difficulty = ref('')
 const letsPlay = ref(false)
 const ans = ref('')
@@ -134,8 +134,8 @@ const playAndPause = () => {
       <div class="grid md:grid-cols-4 grid-cols-2 gap-5 md:px-48 font-medium">
         <!-- for...in ; got property of object -->
         <a href="#level" v-for="(prop,object) in categories"
-        class="py-14 border rounded-lg bg-stone-200 hover:bg-green-200 shadow-lg" 
-        @click="category = prop[0]">
+        class="py-14 border rounded-lg shadow-lg" 
+        @click="category = prop[0]" :class="category === prop[0] ? 'border-stone-200 bg-stone-200 shadow-stone-500' : 'bg-stone-200'">
         {{ object }}
         </a>
       </div>
@@ -146,9 +146,9 @@ const playAndPause = () => {
       <div class="md:text-4xl text-2xl md:none font-extrabold md:my-14 my-7">What <span class="text-red-700">difficulty</span> would you like to start with ?</div>
 
       <div class="grid md:grid-cols-3 grid-cols-1 gap-7 md:px-32 px-5 font-medium">
-        <div id="easy" class="h-96 border rounded-3xl bg-green-400 hover:bg-green-600 shadow-xl px-9 pt-64 text-start" 
+        <div id="easy" class="h-96 border rounded-3xl shadow-xl px-9 pt-64 text-start" 
         v-for="level in levelData"
-        @click="difficulty = level.title">
+        @click="difficulty = level.title" :class="difficulty === level.title ? level.selectedbg : level.bg">
           <p class="text-3xl font-extrabold">{{ level.title.toLocaleUpperCase() }}</p>
           <p class="">{{ level.description }}</p>          
         </div>
@@ -160,8 +160,6 @@ const playAndPause = () => {
         @click="getQuestions(category,difficulty); letsPlay = !letsPlay; playAndPause()">
         <button class="border rounded-lg py-1 px-5 bg-blue-500 text-white font-bold tracking-wide shadow-lg">Lets Play</button></a>
       </div>
-      <p>Selected : {{ category }}</p>
-      <p>level : {{ difficulty }}</p>
     </div>
 </div>
     <!-- BAR -->
@@ -187,7 +185,6 @@ const playAndPause = () => {
               <p>correct : {{ q.correctAnswer }}</p> 
             </div>
       </div> 
-
             <!-- choices -->    
       <div class="grid md:grid-cols-2 grid-cols-1 justify-center mx-10 gap-5">
         <div v-for="choice in getChoices">
