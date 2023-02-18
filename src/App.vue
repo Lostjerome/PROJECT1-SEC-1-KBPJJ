@@ -54,6 +54,17 @@ function getQuestion(category, difficulty) {
   return randomQuestion(question.value)
 }
 
+//set for start quiz again
+const setNewQuiz = () => {
+  showResultPopup.value = false
+  score.value = 0
+  category.value = ''
+  difficulty.value = ''
+  currentQuestion.value = 1
+  process.value = 10
+}
+
+// check user answer and go to next question
 const choiceOnClick = (answer, correctAnswer) => {
   showAnswer.value = true
   if (answer === correctAnswer) {
@@ -73,7 +84,6 @@ const showResult = () => {
       showQuestion.value = false
       showResultPopup.value = true
     }, 500)
-
   }
 }
 
@@ -102,13 +112,13 @@ const darkModeSet = (item) => {
   if (nightMode.value === true) {
     if (item === 'block') {
       return 'bg-[#242731] text-white hover:bg-slate-700'
-    }else if (item === 'font') {
+    } else if (item === 'font') {
       return 'text-white'
-    }else if (item === 'border') {
+    } else if (item === 'border') {
       return 'border-white text-white'
-    }else if (item === 'bg') {
+    } else if (item === 'bg') {
       return 'bg-[#1F2128]'
-    }else if (item === 'btn') {
+    } else if (item === 'btn') {
       return 'bg-teal-500 text-white hover:bg-slate-600 hover:text-white'
     }
   }
@@ -174,8 +184,6 @@ const darkModeSet = (item) => {
       </div>
     </div>
 
-
-
     <!-- catagories -->
     <div class="flex justify-center w-full" id="catagory">
       <div>
@@ -183,7 +191,7 @@ const darkModeSet = (item) => {
           Choose a catagory</h1>
         <div class=" text-center mt-10 grid md:grid-cols-3 gap-4  grid-cols-2">
           <a href="#level" v-for="(cg, key) in catagories"
-            @click="category = catagories[key].reduce((a, b) => a.length > b.length ? a : b); selectCTG=key"
+            @click="category = catagories[key].reduce((a, b) => a.length > b.length ? a : b); selectCTG = key"
             :class="catagories[key].includes(category) ? 'bg-slate-700 text-white' : 'bg-slate-300' && nightMode ? darkModeSet('block') : 'bg-slate-300 text-black hover:bg-black hover:text-white'"
             class="px-2   w-32 h-28 md:w-52 text-sm pt-12 rounded-lg  shadow-xl">
             <div class="flex justify-center">{{ key }}</div>
@@ -191,8 +199,6 @@ const darkModeSet = (item) => {
         </div>
       </div>
     </div>
-
-
 
     <!-- level -->
     <div class="flex justify-center w-full cursor-pointer" id="level">
@@ -224,8 +230,7 @@ const darkModeSet = (item) => {
       </div>
     </div>
 
-
-    <!-- warn -->
+    <!-- warn pop up-->
     <div class="fixed top-0 left-0 right-0 z-50  p-4 grid  place-content-center bg-black/50 h-screen" v-show="warnMode">
       <div class="relative w-full h-full max-w-md md:h-auto ">
         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 ">
@@ -252,7 +257,6 @@ const darkModeSet = (item) => {
       </div>
     </div>
 
-
     <!-- question block -->
     <div v-show="showQuestion" class="h-screen mt-20">
 
@@ -262,7 +266,7 @@ const darkModeSet = (item) => {
           :class="nightMode ? darkModeSet('block') : 'bg-slate-200'">
           <div class="cursor-pointer flex justify-start hover:bg-slate-500/20 w-fit h-7 rounded-lg items-center">
             <a href="#head">
-              <p class=" p-2" :class="nightMode?darkModeSet('font'):'text-black'">back</p>
+              <p class=" p-2" :class="nightMode ? darkModeSet('font') : 'text-black'">back</p>
             </a>
           </div>
           <div class="flex justify-center cursor-pointer">
@@ -271,7 +275,7 @@ const darkModeSet = (item) => {
             }}</p>
           </div>
           <div class="flex justify-end mr-2 cursor-pointer ">
-            <p :class="nightMode?darkModeSet('font'):'text-black'">Inw Trivia</p>
+            <p :class="nightMode ? darkModeSet('font') : 'text-black'">Inw Trivia</p>
           </div>
 
         </div>
@@ -283,8 +287,8 @@ const darkModeSet = (item) => {
         <div class="text-center text-black space-y-6 w-3/5 break-words mt-10">
           <div class=" p-6 rounded-2xl tex-center grid content-center shadow-lg"
             :class="nightMode ? darkModeSet('block') : 'bg-slate-200'">
-            <p class="text-sm">Question {{ currentQuestion }}/10 &nbsp; <span class=" md:hidden">
-                score {{ score }}</span></p>
+            <p class="text-sm">Question {{ currentQuestion }}/10 </p>
+            <p class=" md:hidden">Score <span class="text-teal-400">{{ score }}</span></p>
             <h1 class="text-2xl  md:text-3xl break-words">{{ question[currentQuestion - 1]?.question }}</h1>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2  rounded-2xl p-2 shadow-lg"
@@ -292,7 +296,8 @@ const darkModeSet = (item) => {
             <div v-for="(choice, index) in choices" :key="index" :id="choice"
               @click="choiceOnClick(choice, question[currentQuestion - 1]?.correctAnswer); showResult()"
               :class="showAnswer ? question[currentQuestion - 1]?.correctAnswer === choice ? 'bg-green-400' : 'bg-red-500' : 'bg-teal-500'"
-              class=" p-2 pl-4 pr-4 rounded-lg m-2 hover:bg-black hover:text-white w-84 shadow-lg">
+              class=" p-2 pl-4 pr-4 rounded-lg m-2  w-84 shadow-lg cursor-pointer">
+              <!-- hover:bg-black hover:text-white  -->
               <button>
                 {{ choice }}
               </button>
@@ -300,27 +305,26 @@ const darkModeSet = (item) => {
           </div>
           correct: {{ question[currentQuestion - 1]?.correctAnswer }}
           <div>
-            <button class=" rounded-full w-10 h-10 shadow-xl"
-              :class="nightMode ? darkModeSet('block') : 'bg-slate-200'"
+            <button class=" rounded-full w-10 h-10 shadow-xl" :class="nightMode ? darkModeSet('block') : 'bg-slate-200'"
               @click="currentQuestion = 1; score = 0; process = 10">RL</button>
           </div>
         </div>
       </div>
       <!-- step -->
       <!-- <div class="flex justify-center">
-          <ul class="steps">
-            <li class="step" :class="questionNum > 1 ? 'step-accent' : ''"></li>
-            <li class="step" :class="questionNum > 2 ? 'step-accent' : ''"></li>
-            <li class="step" :class="questionNum > 3 ? 'step-accent' : ''"></li>
-            <li class="step" :class="questionNum > 4 ? 'step-accent' : ''"></li>
-            <li class="step" :class="questionNum > 5 ? 'step-accent' : ''"></li>
-            <li class="step" :class="questionNum > 6 ? 'step-accent' : ''"></li>
-            <li class="step" :class="questionNum > 7 ? 'step-accent' : ''"></li>
-            <li class="step" :class="questionNum > 8 ? 'step-accent' : ''"></li>
-            <li class="step" :class="questionNum > 9 ? 'step-accent' : ''"></li>
-            <li class="step" :class="questionNum > 10 ? 'step-accent' : ''"></li>
-          </ul>
-        </div> -->
+            <ul class="steps">
+              <li class="step" :class="questionNum > 1 ? 'step-accent' : ''"></li>
+              <li class="step" :class="questionNum > 2 ? 'step-accent' : ''"></li>
+              <li class="step" :class="questionNum > 3 ? 'step-accent' : ''"></li>
+              <li class="step" :class="questionNum > 4 ? 'step-accent' : ''"></li>
+              <li class="step" :class="questionNum > 5 ? 'step-accent' : ''"></li>
+              <li class="step" :class="questionNum > 6 ? 'step-accent' : ''"></li>
+              <li class="step" :class="questionNum > 7 ? 'step-accent' : ''"></li>
+              <li class="step" :class="questionNum > 8 ? 'step-accent' : ''"></li>
+              <li class="step" :class="questionNum > 9 ? 'step-accent' : ''"></li>
+              <li class="step" :class="questionNum > 10 ? 'step-accent' : ''"></li>
+            </ul>
+          </div> -->
 
       <!-- progress bar-->
       <div class="flex justify-center">
@@ -332,7 +336,8 @@ const darkModeSet = (item) => {
 
       <!-- ref -->
       <div class="flex justify-center mt-4 ">
-        <p :class="nightMode?darkModeSet('font'): 'text-black'">All question are from <a href="https://the-trivia-api.com/">"The Trivia API"</a></p>
+        <p :class="nightMode ? darkModeSet('font') : 'text-black'">All question are from <a
+            href="https://the-trivia-api.com/">"The Trivia API"</a></p>
       </div>
     </div>
 
@@ -350,22 +355,19 @@ const darkModeSet = (item) => {
               <p class="text-sm">Level : <span :class="'text-teal-600'">{{ difficulty.toUpperCase() }}</span></p>
             </div>
             <div class="flex justify-center">
-              <div class=" leading-none p-6 space-y-6 bg-slate-200 w-36 h-36 rounded-full text-center">
+              <div class="p-6 space-y-5 bg-slate-200 w-36 h-36 rounded-full text-center">
                 <p class="font-bold text-5xl">{{ score }}</p>
-                <p class="leading-none">Out of 10</p>
+                <p>Out of 10</p>
               </div>
             </div>
             <div class="flex items-center p-6 space-x-2  justify-center rounded-b dark:border-gray-600">
               <a href="#head">
-                <button
-                  @click="showResultPopup = !showResultPopup ; score = 0; category = ''; difficulty = '', currentQuestion = 1; process = 10"
+                <button @click="setNewQuiz()"
                   class="text-black bg-white border border-black hover:bg-black  hover:text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                   Home</button>
               </a>
-
               <a href="#catagory">
-                <button
-                  @click="showResultPopup = !showResultPopup ; score = 0; category = ''; difficulty = '', currentQuestion = 1; process = 10"
+                <button @click="setNewQuiz()"
                   class="text-black bg-teal-500 hover:bg-black  font-medium rounded-lg text-sm px-5 py-2.5 text-center hover:text-white">
                   Play again</button></a>
             </div>
@@ -373,11 +375,7 @@ const darkModeSet = (item) => {
         </div>
       </div>
     </div>
-
-
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
