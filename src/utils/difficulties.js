@@ -2,7 +2,7 @@ const difficulties = [
   {
     title: "easy",
     description: "A piece of cake.",
-    bg: "bg-green-500 hover:bg-green-600",
+    bg: "bg-green-500 hover:bg-green-600 ",
     selectedbg:
       "bg-gradient-to-r md:bg-gradient-to-b from-teal-400 to-green-600",
   },
