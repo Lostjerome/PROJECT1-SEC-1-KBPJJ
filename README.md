@@ -31,7 +31,7 @@ A simple and interactive quiz app built with Vue.js. The app allows users to tak
 
 ### 2. Click Let's play button to start playing
 
-let’s play เพื่อเริ่มเล่น หากยังไม่เลือกทั้ง category และ difficulty ปุ่มจะยังไม่แสดง
+หากยังไม่เลือกทั้ง category และ difficulty ปุ่มจะยังไม่แสดง
 
 <img  width="70%" alt="letsplay-btn-htp" src="https://user-images.githubusercontent.com/88102079/220555327-bde5755e-3b1a-4895-aec8-7f6455db50fc.png" />
 
