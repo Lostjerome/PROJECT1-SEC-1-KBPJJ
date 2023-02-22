@@ -149,10 +149,10 @@ const ansOnClick = (ans) => {
   }
 
   setTimeout(() => {
-    currentQuestionNumber.value == questions.value.length - 1
-      ? (isFinish.value =
-          true && isMusicPlaying.value && finishSoundAudio.play())
-      : currentQuestionNumber.value++;
+    if (currentQuestionNumber.value == questions.value.length - 1) {
+      isFinish.value = true;
+      isMusicPlaying.value && finishSoundAudio.play();
+    } else currentQuestionNumber.value++;
 
     showAnswer.value = false;
   }, 1500);
