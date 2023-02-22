@@ -753,7 +753,8 @@ getCategories();
           >
             <!--button-play-again -->
             <button
-              class="bg-teal-500 text-white rounded-lg w-full py-2 md:hover:bg-teal-600 duration-200"
+              :class="darkMode ? 'border-white' : 'border-black'"
+              class="bg-teal-500 text-white rounded-lg w-full py-2 md:hover:bg-teal-600 duration-200 border"
               @click="restartPlaying"
             >
               Play again
