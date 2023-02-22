@@ -68,7 +68,7 @@ If both category and difficulty are not selected, the button will not be display
 
 ## API Reference
 
-The API question used in this project are provided by [The Trivia API](https://the-trivia-api.com/) . Special thanks to the API team for providing the data for this project.
+The API question used in this project are provided by [The Trivia API](https://the-trivia-api.com/). Special thanks to the API team for providing the data for this project.
 
 <img width="70%" alt="The Trivia API website homepage" src="https://user-images.githubusercontent.com/88102079/220561456-9ff5390b-4d2d-442d-ad46-4b77539a26ee.png" />
 
