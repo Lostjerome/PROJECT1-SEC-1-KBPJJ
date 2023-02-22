@@ -94,13 +94,6 @@ const getQuestions = async (category, difficulty) => {
   questions.value = jsonData;
 };
 
-// function getChoice(currentQuestion) {
-//   return shuffle([
-//     currentQuestion?.correctAnswer,
-//     ...currentQuestion?.incorrectAnswers,
-//   ]);
-// }
-
 const choices = computed(() => {
   let choices = [];
   if (questions.value[currentQuestionNumber.value]) {
@@ -122,6 +115,30 @@ const toggleHowToPlay = () => {
   htpPage.value = 1;
 };
 
+const onselectCategory = (category) => {
+  selectedCategory.value = categories.value[category].reduce((a, b) =>
+    a.length > b.length ? a : b
+  );
+  selectedDifficulty.value && selectedCategory.value
+    ? setTimeout(() => {
+        playButtonRef.value.scrollIntoView({
+          behavior: "smooth",
+        });
+      }, 1)
+    : difficultiesRef.value.scrollIntoView({ behavior: "smooth" });
+};
+
+const onselectDifficulty = (difficulty) => {
+  selectedDifficulty.value = difficulty;
+  selectedDifficulty.value && selectedCategory.value
+    ? setTimeout(() => {
+        playButtonRef.value.scrollIntoView({
+          behavior: "smooth",
+        });
+      }, 1)
+    : categoriesRef.value.scrollIntoView({ behavior: "smooth" });
+};
+
 const ansOnClick = (ans) => {
   showAnswer.value = true;
   if (ans === questions.value[currentQuestionNumber.value]?.correctAnswer) {
@@ -136,6 +153,7 @@ const ansOnClick = (ans) => {
       ? (isFinish.value =
           true && isMusicPlaying.value && finishSoundAudio.play())
       : currentQuestionNumber.value++;
+
     showAnswer.value = false;
   }, 1500);
 };
@@ -151,9 +169,9 @@ const startPlaying = () => {
 };
 
 const shuffle = (array) => {
-  let currentIndex = array.length,
-    temporaryValue,
-    randomIndex;
+  let currentIndex = array.length;
+  let temporaryValue;
+  let randomIndex;
 
   // While there remain elements to shuffle...
   while (0 !== currentIndex) {
@@ -192,16 +210,6 @@ const playAndPause = (param) => {
   } else themeSongRef.value.pause();
 };
 
-//when selected category and difficulty
-onUpdated(() => {
-  selectedCategory &&
-    selectedDifficulty &&
-    setTimeout(() => {
-      playButtonRef.value.scrollIntoView({ behavior: "smooth" });
-    }, 1);
-});
-
-// on setup
 getCategories();
 </script>
 
@@ -510,14 +518,7 @@ getCategories();
                     : buttonLight
                 "
                 class="py-5 px-3 text-center rounded-xl font-bold drop-shadow-lg duration-200 border"
-                @click="
-                  () => {
-                    selectedCategory = categories[category].reduce((a, b) =>
-                      a.length > b.length ? a : b
-                    );
-                    difficultiesRef.scrollIntoView({ behavior: 'smooth' });
-                  }
-                "
+                @click="onselectCategory(category)"
               >
                 {{ category }}
               </button>
@@ -541,11 +542,7 @@ getCategories();
               <button
                 v-for="(difficulty, key) in difficulties"
                 :key="key"
-                @click="
-                  () => {
-                    selectedDifficulty = difficulty.title;
-                  }
-                "
+                @click="onselectDifficulty(difficulty.title)"
                 :class="
                   selectedDifficulty
                     ? selectedDifficulty === difficulty.title
