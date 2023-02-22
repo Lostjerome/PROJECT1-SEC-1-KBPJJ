@@ -4,7 +4,7 @@
 
 A simple and interactive quiz app built with Vue.js. The app allows users to take quizzes on various topics and get instant results with scores.
 
-[![Tech stack](https://skillicons.dev/icons?i=vue,tailwind)](https://skillicons.dev)
+[![Tech stack](https://skillicons.dev/icons?i=vue,tailwind,vercel)](https://skillicons.dev)
 
 ![image](https://user-images.githubusercontent.com/88102079/220551177-30811674-b99a-412e-8c7b-fb4fdb2045a9.png)
 
