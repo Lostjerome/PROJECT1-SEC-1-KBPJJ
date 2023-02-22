@@ -11,7 +11,7 @@ A simple and interactive quiz app built with Vue.js. The app allows users to tak
 
 ## Features
 
-- A user-friendly interface with a smooth and modern design.
+- A user-friendly interface with a responsive design.
 - Instant scoring and result display after each quiz.
 - Randomization of questions for each user to ensure a unique quiz experience.
 - Various question categories and difficulties.
