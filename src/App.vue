@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed, onUpdated } from "vue";
 
 import moon from "./components/icons/moon.vue";
 import sun from "./components/icons/sun.vue";
@@ -30,9 +30,9 @@ const correctSoundAudio = new Audio(correctSound);
 const wrongSoundAudio = new Audio(wrongSound);
 const finishSoundAudio = new Audio(finishSound);
 
-correctSoundAudio.volume = 0.2;
-wrongSoundAudio.volume = 0.2;
-finishSoundAudio.volume = 0.1;
+correctSoundAudio.volume = 0.05;
+wrongSoundAudio.volume = 0.05;
+finishSoundAudio.volume = 0.05;
 // theme
 const themeDark = ref({
   "background-color": "#1F2128",
@@ -145,13 +145,29 @@ const startPlaying = () => {
     isPlaying.value = !isPlaying.value;
     setTimeout(() => {
       window.scrollTo(0, 0);
-    }, 100);
+    }, 1);
     playAndPause("restart");
   });
 };
 
 const shuffle = (array) => {
-  return array?.sort(() => Math.random() - 0.5);
+  let currentIndex = array.length,
+    temporaryValue,
+    randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
 };
 
 const playAndPause = (param) => {
@@ -176,14 +192,14 @@ const playAndPause = (param) => {
   } else themeSongRef.value.pause();
 };
 
-watch(
-  () => selectedCategory.value && selectedDifficulty.value,
-  () => {
+//when selected category and difficulty
+onUpdated(() => {
+  selectedCategory &&
+    selectedDifficulty &&
     setTimeout(() => {
       playButtonRef.value.scrollIntoView({ behavior: "smooth" });
     }, 1);
-  }
-);
+});
 
 // on setup
 getCategories();
@@ -307,9 +323,7 @@ getCategories();
                   :class="darkMode ? 'text-white' : 'text-slate-600'"
                   class="ml-5"
                 >
-                  เลือก category และ difficulty ที่ต้องการ เมื่อเลือกครบ
-                  จะแสดงปุ่ม let’s play สำหรับเริ่มเล่น หากเลือกไม่ครบ
-                  ปุ่มจะยังไม่แสดง
+                  Choose the category and difficulty you want to play.
                 </p>
                 <img
                   src="./assets/image/select-category-htp.png"
@@ -330,6 +344,13 @@ getCategories();
                 <p class="text-xl font-bold mb-2">
                   2. Click Let's play button to start playing
                 </p>
+                <p
+                  :class="darkMode ? 'text-white' : 'text-slate-600'"
+                  class="ml-5"
+                >
+                  If both category and difficulty are not selected, the button
+                  will not be displayed.
+                </p>
                 <img
                   src="./assets/image/letsplay-btn-htp.png"
                   alt="how to play"
@@ -348,30 +369,26 @@ getCategories();
                   :class="darkMode ? 'text-white' : 'text-slate-600'"
                   class="ml-5"
                 >
-                  - ปุ่ม back เมื่อกดจะกลับไปสู้หน้า home
+                  - <b>Back</b>: Return to home page
                 </p>
                 <p
                   :class="darkMode ? 'text-white' : 'text-slate-600'"
                   class="ml-5"
                 >
-                  - Score แสดงคะแนนที่ทำได้ระหว่าง quiz
+                  - <b>Score</b>: Shows scores scored during quiz in real time.
                 </p>
                 <p
                   :class="darkMode ? 'text-white' : 'text-slate-600'"
                   class="ml-5"
                 >
-                  -
-                  <volumeOn
-                    :class="darkMode ? 'fill-white' : 'fill-black'"
-                    class="inline w-8 h-8"
-                  />
-                  เปิดหรือปิดเสียงเพลงประกอบ
+                  - <b>Song button</b>: Music button to switch background music
+                  on or off.
                 </p>
                 <p
                   :class="darkMode ? 'text-white' : 'text-slate-600'"
                   class="ml-5"
                 >
-                  - เปลี่ยนเป็น dark mode หรือ light mode
+                  - <b>Dark mode button</b>: Switch to dark mode or light mode
                 </p>
                 <img
                   src="./assets/image/controll-bar-htp.png"
@@ -391,28 +408,30 @@ getCategories();
                   :class="darkMode ? 'text-white' : 'text-slate-600'"
                   class="ml-5"
                 >
-                  - กล่อง question แสดงเลขข้อที่กำลังเล่นอยู่ และคำถาม
+                  - The question box shows the current verse number and the
+                  question.
                 </p>
                 <p
                   :class="darkMode ? 'text-white' : 'text-slate-600'"
                   class="ml-5"
                 >
-                  - ปุ่มคำตอบ มีทั้งหมด 4 ตัวเลือก เมื่อกดตอบคำถาม
-                  ปุ่มที่เป็นคำตอบที่ถูกต้อง จะเปลี่ยนเป็นสีเขียว
-                  จากนั้นจะเปลี่ยนคำถามต่อไป
+                  - The answer button has a total of 4 options. When pressed,
+                  button with the correct answer will turn green. Then the next
+                  question will replace.
                 </p>
                 <p
                   :class="darkMode ? 'text-white' : 'text-slate-600'"
                   class="ml-5"
                 >
-                  - ถ้าผู้เล่น ตอบคำถามถูกต้อง score จะเพิ่มขึ้น 1 คะแนน
+                  - If the player answers the question correctly, the score will
+                  increase by 1 point each time.
                 </p>
                 <p
                   :class="darkMode ? 'text-white' : 'text-slate-600'"
                   class="ml-5"
                 >
-                  - ปุ่ม restart สำหรับเริ่มใหม่ในหมวดหมู่เดิม เมื่อกด
-                  จะทำการสุ่มคำถามใหม่ และเริ่มนับ score ใหม่
+                  - <b>Restart button</b>: Starting over in the same category
+                  and difficulty, and recount the score.
                 </p>
                 <img
                   src="./assets/image/quiz-body-htp.png"
@@ -432,21 +451,22 @@ getCategories();
                   :class="darkMode ? 'text-white' : 'text-slate-600'"
                   class="ml-5"
                 >
-                  - หน้าต่างผลลัพธ์ จะแสดงหมวดหมู่ และความยากที่ผู้ใช้เลือก
-                  และคะแนนที่ทำได้จากทั้งหมด 10 ข้่อ
+                  - Result window will displays your category and difficulty
+                  selected by the user and scores obtained from all 10 questions
                 </p>
                 <p
                   :class="darkMode ? 'text-white' : 'text-slate-600'"
                   class="ml-5"
                 >
-                  - ปุ่ม Try other one เมื่อกดจะทำการกลับไปยังหน้าเลือก category
-                  และ level อีกครั้ง
+                  - <b>Try other one</b>: Return to the category and difficulty
+                  selection page again.
                 </p>
                 <p
                   :class="darkMode ? 'text-white' : 'text-slate-600'"
                   class="ml-5"
                 >
-                  - Play again จะเริ่มเล่นใหม่ใน category และ difficulty เดิม
+                  - <b>Play again</b>: Start playing again in the same category
+                  and difficulty.
                 </p>
                 <img
                   src="./assets/image/result-htp.png"
@@ -689,7 +709,7 @@ getCategories();
           class="border rounded-lg md:rounded-2xl w-[calc(100%-2.5rem)] max-w-[52rem] p-2 py-4 md:p-4 md:py-7 mt-10 text-center fixed left-1/2 -translate-x-1/2 bottom-5"
         >
           <p>
-            All questions are from
+            All questions are provided by
             <a
               target="_blank"
               :class="
@@ -715,7 +735,8 @@ getCategories();
         >
           <p class="font-bold text-2xl">Hooray!</p>
           <p class="m-3">
-            You've finished all {{ selectedCategory }} quizes with
+            You've finished all
+            {{ selectedCategory.replaceAll("_", " ") }} quizes with
             {{ selectedDifficulty }} level. <br />
             Here's your score
           </p>
