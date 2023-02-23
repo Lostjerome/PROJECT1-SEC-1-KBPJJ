@@ -74,11 +74,16 @@ The API question used in this project are provided by [The Trivia API](https://t
 
 ## Members
 
-- [@sealbb](https://www.github.com/sealbb) 64130500013 ชลธิชา หลี่
-- [@lostjerome](https://www.github.com/lostjerome) 64130500017 ณรงค์รัชช์ ธนจารุสวัสดิ์
-- [@bamxxls](https://www.github.com/bamxxls) 64130500026 ทักษพร เลไชยสงค์
-- [@CRYINGV](https://www.github.com/CRYINGV) 64130500030 ธนภัทร จุลมีวงษ์
-- [@darKKOREO](https://www.github.com/darKKOREO) 64130500031 ธนภัทร์ ดาวลอย
+- [@sealbb](https://www.github.com/sealbb) 64130500013 Chonticha Li *(20%)*
+> รับผิดชอบในส่วนของการทำ UI และ function ที่อยู่ในหน้าแรกของ Web application ทั้งหมด <br/>รับผิดชอบในส่วนของ function หลักที่เกี่ยวกับการแสดงผลของคำตอบ <br/>และจัดทำเนื้อหาและวางโครงใน how to play ร่วมกับ *@darKKOREO*
+- [@lostjerome](https://www.github.com/lostjerome) 64130500017 Naronkrach Tanajarusawas *(20%)*
+> เป็นที่ปรึกษาหลักของเพื่อนในกลุ่ม และคอยรวม code จากเพื่อนคนอื่นและปรับปรุงแก้ไข <br/>จัดเรียงและ coding ในส่วนของ how to play
+- [@bamxxls](https://www.github.com/bamxxls) 64130500026 Thaksaporn Lachaisong *(20%)*
+> รับผิดชอบในส่วนของการทำ UI และ function ที่อยู่ในหน้าของการเลือก category และ ระดับความยากของคำถาม <br/>รวมไปถึง function ของการเล่นเพลงและเอฟเฟคเสียงต่าง ๆ
+- [@CRYINGV](https://www.github.com/CRYINGV) 64130500030 Thanaphat Julmeewong *(20%)*
+> รับผิดชอบในส่วนของ UI ที่อยู่ในหน้า quiz หรือหน้าหลังจากกดเริ่มเกมและรับผิดชอบส่วนของ navigation bar ร่วมกับ *@darKKOREO* <br/>รับผิดชอบในส่วนของ Dark mode ทั้งหมด และรับผิดชอบส่วน responsive ของหน้า quiz
+- [@darKKOREO](https://www.github.com/darKKOREO) 64130500031 Tanapat Daoloy *(20%)*
+> รับผิดชอบในส่วนของ UI ที่อยู่ในหน้า quiz หรือหน้าหลังจากกดเริ่มเกมและรับผิดชอบส่วนของ navigation bar ร่วมกับ *@CRYINGV* <br/>รับผิดชอบในส่วนการแสดงข้อคำถามและคำตอบ ทำ popup result <br/>และจัดทำเนื้อหาและวางโครงใน how to play ร่วมกับ *@sealbb*
 
 
 
